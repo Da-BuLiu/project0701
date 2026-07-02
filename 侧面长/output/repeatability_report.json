@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-07-02T02:25:00.538766+00:00",
+  "input_path": ".",
+  "algorithm": {
+    "name": "calibrated_bright_side_band_length",
+    "version": "1.1",
+    "description": "Detects the long bright side band, then refines both endpoints with a high-percentile projection profile and subpixel threshold crossings calibrated from the single manual line.",
+    "uses_synthetic_data": false,
+    "uses_fake_implementation": false
+  },
+  "reference": {
+    "label_json": "s1_label.json",
+    "label_image": "s1_label.bmp",
+    "manual_points": [
+      [
+        143.5483870967742,
+        820.9677419354839
+      ],
+      [
+        2880.6451612903224,
+        833.8709677419355
+      ]
+    ],
+    "manual_length_px": 2737.1271882280043,
+    "manual_angle_deg": 0.2701018506890344,
+    "x_left_offset_px": -0.4516129032257936,
+    "x_right_offset_px": 3.6451612903224486,
+    "edge_x_left_offset_px": 4.45976615555648,
+    "edge_x_right_offset_px": 0.42914273818541915,
+    "reference_edge_left_px": 139.08862094121773,
+    "reference_edge_right_px": 2880.216018552137,
+    "y_mid_fraction": 0.1548151636449261
+  },
+  "summary": {
+    "image_count": 120,
+    "ok_count": 120,
+    "check_count": 0,
+    "anomaly_count": 0,
+    "repeatability_group_count": 6
+  },
+  "priority_pos1_repeatability": [
+    {
+      "sample_id": "s1",
+      "position": "pos1",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2737.1065735088696,
+      "length_max_px": 2737.1435196445186,
+      "length_range_px": 0.03694613564903193,
+      "length_mean_px": 2737.126519358604,
+      "length_std_px": 0.013126854529343004,
+      "length_cv_percent": 0.00047958523058769833,
+      "angle_min_deg": 0.23565744030415667,
+      "angle_max_deg": 0.2858288462125999,
+      "angle_range_deg": 0.05017140590844324,
+      "x1_range_px": 0.054075327239473836,
+      "x2_range_px": 0.02641901825018067
+    },
+    {
+      "sample_id": "s2",
+      "position": "pos1",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2736.0124398545536,
+      "length_max_px": 2736.453801628259,
+      "length_range_px": 0.4413617737054665,
+      "length_mean_px": 2736.0582370358816,
+      "length_std_px": 0.09453953571529562,
+      "length_cv_percent": 0.003455318839182143,
+      "angle_min_deg": 0.1746635694107605,
+      "angle_max_deg": 0.2162241876872394,
+      "angle_range_deg": 0.04156061827647889,
+      "x1_range_px": 0.22134270991017502,
+      "x2_range_px": 0.6210491479005213
+    }
+  ],
+  "repeatability": [
+    {
+      "sample_id": "s1",
+      "position": "pos1",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2737.1065735088696,
+      "length_max_px": 2737.1435196445186,
+      "length_range_px": 0.03694613564903193,
+      "length_mean_px": 2737.126519358604,
+      "length_std_px": 0.013126854529343004,
+      "length_cv_percent": 0.00047958523058769833,
+      "angle_min_deg": 0.23565744030415667,
+      "angle_max_deg": 0.2858288462125999,
+      "angle_range_deg": 0.05017140590844324,
+      "x1_range_px": 0.054075327239473836,
+      "x2_range_px": 0.02641901825018067
+    },
+    {
+      "sample_id": "s1",
+      "position": "pos2",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2733.703811218703,
+      "length_max_px": 2733.7811923091613,
+      "length_range_px": 0.07738109045840247,
+      "length_mean_px": 2733.7474558679723,
+      "length_std_px": 0.019620049843217927,
+      "length_cv_percent": 0.0007176979644225588,
+      "angle_min_deg": -0.01086137316613381,
+      "angle_max_deg": 0.03715801307333118,
+      "angle_range_deg": 0.04801938623946499,
+      "x1_range_px": 0.05975834649430567,
+      "x2_range_px": 0.027227367037539807
+    },
+    {
+      "sample_id": "s1",
+      "position": "pos3",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2716.1483790725847,
+      "length_max_px": 2716.244947293834,
+      "length_range_px": 0.09656822124907194,
+      "length_mean_px": 2716.1887749402317,
+      "length_std_px": 0.02839948365380182,
+      "length_cv_percent": 0.0010455636926202502,
+      "angle_min_deg": 0.7151169733316143,
+      "angle_max_deg": 0.7407945623778738,
+      "angle_range_deg": 0.025677589046259497,
+      "x1_range_px": 0.09233194308990278,
+      "x2_range_px": 0.07790120347453922
+    },
+    {
+      "sample_id": "s2",
+      "position": "pos1",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2736.0124398545536,
+      "length_max_px": 2736.453801628259,
+      "length_range_px": 0.4413617737054665,
+      "length_mean_px": 2736.0582370358816,
+      "length_std_px": 0.09453953571529562,
+      "length_cv_percent": 0.003455318839182143,
+      "angle_min_deg": 0.1746635694107605,
+      "angle_max_deg": 0.2162241876872394,
+      "angle_range_deg": 0.04156061827647889,
+      "x1_range_px": 0.22134270991017502,
+      "x2_range_px": 0.6210491479005213
+    },
+    {
+      "sample_id": "s2",
+      "position": "pos2",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2734.1941051392096,
+      "length_max_px": 2734.278918691942,
+      "length_range_px": 0.08481355273261215,
+      "length_mean_px": 2734.2292907995143,
+      "length_std_px": 0.019709847798209112,
+      "length_cv_percent": 0.0007208557038186717,
+      "angle_min_deg": -0.4838956760572606,
+      "angle_max_deg": -0.45272518193333355,
+      "angle_range_deg": 0.03117049412392703,
+      "x1_range_px": 0.055153694565376554,
+      "x2_range_px": 0.06024681105191121
+    },
+    {
+      "sample_id": "s2",
+      "position": "pos3",
+      "image_count": 20,
+      "ok_count": 20,
+      "length_min_px": 2723.5166901554644,
+      "length_max_px": 2723.6186644007057,
+      "length_range_px": 0.10197424524130838,
+      "length_mean_px": 2723.582432858143,
+      "length_std_px": 0.022301221792258578,
+      "length_cv_percent": 0.0008188194167802569,
+      "angle_min_deg": -0.47092895489110737,
+      "angle_max_deg": -0.4437404154838366,
+      "angle_range_deg": 0.027188539407270784,
+      "x1_range_px": 0.04176646926211447,
+      "x2_range_px": 0.07426730553470406
+    }
+  ],
+  "anomalies": []
+}

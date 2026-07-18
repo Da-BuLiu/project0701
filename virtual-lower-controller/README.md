@@ -33,6 +33,7 @@
 
 ## 项目合同
 
+- [规范文档使用指南](docs/规范文档使用指南.md)：不确定该看或该修改哪份文件时，从这里开始。
 - [PLC / 中台字段表](docs/plc-field-table.md)
 - [设备与工件状态机](docs/state-machine.md)
 - [报警目录](docs/alarm-catalog.md)

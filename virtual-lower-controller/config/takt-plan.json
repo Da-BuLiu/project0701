@@ -1,7 +1,7 @@
 {
   "$schemaVersion": "0.1",
   "lineId": "137-housing-inspection",
-  "description": "137 壳体自动检测线虚拟下位机节拍与资源初版。仅首件约 125 秒、稳定投料间隔约 65 秒来自现有节拍分析；单工序时长为仿真临时分配，待现场动作时序和设备接口确认后替换。",
+  "description": "137 壳体自动检测线虚拟下位机节拍与资源初版。首件约 125 秒、第一件进入 OP80 后约第 65 秒可开始第二件来自现有节拍分析；OP10～OP70 临时时长合计 65 秒，OP80 临时时长 60 秒，总计 125 秒。单工序时长均为仿真临时分配，待现场动作时序和设备接口确认后替换。",
   "timing": {
     "firstPieceTargetSeconds": 125,
     "steadyStateReleaseIntervalSeconds": 65,
@@ -24,7 +24,7 @@
       "id": "OP10",
       "name": "上料机器人取料",
       "sequence": 10,
-      "simulatedDurationSeconds": 12,
+      "simulatedDurationSeconds": 6,
       "durationStatus": "temporary",
       "resources": ["Robot"],
       "timeoutSeconds": 30
@@ -33,7 +33,7 @@
       "id": "OP20",
       "name": "气缸二次定位",
       "sequence": 20,
-      "simulatedDurationSeconds": 3,
+      "simulatedDurationSeconds": 2,
       "durationStatus": "temporary",
       "resources": ["TransferModule"],
       "timeoutSeconds": 15
@@ -42,7 +42,7 @@
       "id": "OP30",
       "name": "端面检测、料号/SN 识别",
       "sequence": 30,
-      "simulatedDurationSeconds": 18,
+      "simulatedDurationSeconds": 12,
       "durationStatus": "temporary",
       "resources": ["TransferModule", "EndFaceCamera"],
       "timeoutSeconds": 45
@@ -51,7 +51,7 @@
       "id": "OP40",
       "name": "全长检测",
       "sequence": 40,
-      "simulatedDurationSeconds": 10,
+      "simulatedDurationSeconds": 8,
       "durationStatus": "temporary",
       "resources": ["Conveyor", "LengthCamera"],
       "timeoutSeconds": 30
@@ -60,7 +60,7 @@
       "id": "OP50",
       "name": "柱面及端面检测、旋转角度定位",
       "sequence": 50,
-      "simulatedDurationSeconds": 20,
+      "simulatedDurationSeconds": 15,
       "durationStatus": "temporary",
       "resources": ["Conveyor", "CylinderCamera"],
       "timeoutSeconds": 60,
@@ -75,7 +75,7 @@
       "id": "OP60",
       "name": "同轴线光谱检测",
       "sequence": 60,
-      "simulatedDurationSeconds": 15,
+      "simulatedDurationSeconds": 10,
       "durationStatus": "temporary",
       "resources": ["Conveyor", "LineSpectrometer"],
       "timeoutSeconds": 45
@@ -84,7 +84,7 @@
       "id": "OP70",
       "name": "内窥镜检测",
       "sequence": 70,
-      "simulatedDurationSeconds": 22,
+      "simulatedDurationSeconds": 12,
       "durationStatus": "temporary",
       "resources": ["Conveyor", "Endoscope"],
       "timeoutSeconds": 75,
@@ -99,7 +99,7 @@
       "id": "OP80",
       "name": "螺纹检测、OK/NG 下料",
       "sequence": 80,
-      "simulatedDurationSeconds": 25,
+      "simulatedDurationSeconds": 60,
       "durationStatus": "temporary",
       "resources": ["TransferModule", "ThreadPlatform", "Robot"],
       "timeoutSeconds": 90,

@@ -1,0 +1,305 @@
+openapi: 3.0.3
+info:
+  title: 137 壳体虚拟下位机 API
+  version: 0.1.0-draft
+  description: |
+    中台调用虚拟下位机的稳定业务接口草案。它不暴露 PLC 寄存器；未来只替换 PLC 适配器，不改变此接口。
+    所有真实 PLC 地址、最终报警码、检测项字段和 OK/NG 汇总规则均待确认。
+servers:
+  - url: http://localhost:5000
+    description: 开发环境（端口待实现时确认）
+tags:
+  - name: Health
+  - name: Device
+  - name: Workpieces
+  - name: Commands
+paths:
+  /api/v1/health:
+    get:
+      tags: [Health]
+      summary: 获取服务健康状态
+      operationId: getHealth
+      responses:
+        '200':
+          description: 服务可用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /api/v1/device/state:
+    get:
+      tags: [Device]
+      summary: 获取当前设备状态
+      operationId: getDeviceState
+      responses:
+        '200':
+          description: 当前设备状态
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceState'
+  /api/v1/commands:
+    post:
+      tags: [Commands]
+      summary: 提交设备控制命令
+      description: |
+        以 commandId 幂等处理命令。202 表示已受理，不代表物理动作完成；请读取设备状态或订阅 SignalR 事件确认。
+      operationId: submitCommand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandRequest'
+      responses:
+        '202':
+          description: 命令已受理，或幂等返回首次受理结果
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandReceipt'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: commandId 被不同命令载荷重复使用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: 命令在当前设备状态不允许
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/workpieces:
+    get:
+      tags: [Workpieces]
+      summary: 查询在制工件和历史工件
+      operationId: listWorkpieces
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/WorkpieceStatus'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+      responses:
+        '200':
+          description: 工件列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workpiece'
+  /api/v1/workpieces/{workpieceId}:
+    get:
+      tags: [Workpieces]
+      summary: 查询单件工件的流转与结果
+      operationId: getWorkpiece
+      parameters:
+        - $ref: '#/components/parameters/WorkpieceId'
+      responses:
+        '200':
+          description: 工件详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workpiece'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /hubs/events:
+    get:
+      tags: [Device]
+      summary: SignalR 事件 Hub 地址
+      description: |
+        SignalR 协商与连接端点。客户端应订阅 `deviceStateChanged`、`workpieceChanged`、`alarmRaised` 和 `commandCompleted`。
+        具体 Hub 协议与事件重放方案将在实现阶段固定。
+      responses:
+        '101':
+          description: 协议切换（实际协商由 SignalR 处理）
+components:
+  parameters:
+    WorkpieceId:
+      name: workpieceId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: 请求无效
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, checkedAt]
+      properties:
+        status:
+          type: string
+          enum: [Healthy, Degraded, Unhealthy]
+        checkedAt:
+          type: string
+          format: date-time
+        plcConnectionState:
+          $ref: '#/components/schemas/PlcConnectionState'
+    CommandRequest:
+      type: object
+      required: [commandId, commandType]
+      properties:
+        commandId:
+          type: string
+          format: uuid
+        commandType:
+          type: string
+          enum: [Start, Pause, Resume, Stop, Reset, Home]
+        requestedBy:
+          type: string
+          maxLength: 128
+    CommandReceipt:
+      type: object
+      required: [commandId, accepted, receivedAt, deviceMode]
+      properties:
+        commandId:
+          type: string
+          format: uuid
+        accepted:
+          type: boolean
+        idempotentReplay:
+          type: boolean
+        receivedAt:
+          type: string
+          format: date-time
+        deviceMode:
+          $ref: '#/components/schemas/DeviceMode'
+    DeviceState:
+      type: object
+      required: [deviceMode, stateChangedAt, plcConnectionState, activeAlarms]
+      properties:
+        deviceMode:
+          $ref: '#/components/schemas/DeviceMode'
+        stateChangedAt:
+          type: string
+          format: date-time
+        activeCommandId:
+          type: string
+          format: uuid
+          nullable: true
+        plcConnectionState:
+          $ref: '#/components/schemas/PlcConnectionState'
+        safetyState:
+          type: string
+          enum: [Unknown, Normal, Tripped]
+        activeAlarms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alarm'
+    Workpiece:
+      type: object
+      required: [workpieceId, status, createdAt, operations]
+      properties:
+        workpieceId:
+          type: string
+        sn:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/WorkpieceStatus'
+        currentOperation:
+          $ref: '#/components/schemas/OperationId'
+        cycleResult:
+          type: string
+          nullable: true
+          enum: [OK, NG, Aborted, Unknown]
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        occupiedResourceIds:
+          type: array
+          items:
+            type: string
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationExecution'
+    OperationExecution:
+      type: object
+      required: [operationId, status]
+      properties:
+        operationId:
+          $ref: '#/components/schemas/OperationId'
+        status:
+          type: string
+          enum: [Pending, Running, Passed, Failed, TimedOut, Aborted]
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        resultReference:
+          type: string
+          nullable: true
+    Alarm:
+      type: object
+      required: [code, severity, occurredAt]
+      properties:
+        code:
+          type: string
+        severity:
+          type: string
+          enum: [Info, Warning, Error, Critical]
+        source:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+        workpieceId:
+          type: string
+          nullable: true
+        operationId:
+          $ref: '#/components/schemas/OperationId'
+    ErrorResponse:
+      type: object
+      required: [code, message, traceId]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        traceId:
+          type: string
+    DeviceMode:
+      type: string
+      enum: [Idle, Running, Paused, Stopped, Alarm]
+    WorkpieceStatus:
+      type: string
+      enum: [Waiting, InProcess, Completed, Failed, Aborted]
+    OperationId:
+      type: string
+      nullable: true
+      enum: [OP10, OP20, OP30, OP40, OP50, OP60, OP70, OP80]
+    PlcConnectionState:
+      type: string
+      enum: [Simulated, Connected, Disconnected, Faulted]

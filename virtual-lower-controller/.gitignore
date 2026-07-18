@@ -1,0 +1,28 @@
+# Build outputs
+[Bb]in/
+[Oo]bj/
+
+# IDE and user-specific settings
+.vs/
+.vscode/
+.agents/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Test and coverage outputs
+TestResults/
+coverage/
+coverage.*
+
+# Local runtime data, logs, and secrets
+data/
+logs/
+*.log
+appsettings.Development.json
+secrets.json
+
+# OS files
+.DS_Store
+Thumbs.db
